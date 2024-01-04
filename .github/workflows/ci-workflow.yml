@@ -1,13 +1,19 @@
 name: CI
 
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  build-test:
+  php_matrix:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        version: [7.4, 8.3]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -15,7 +21,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "7.4"
+          php-version: ${{ matrix.version }}
           extensions: mbstring, intl, sockets
           coverage: xdebug
           tools: composer, prestissimo
